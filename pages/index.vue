@@ -5,9 +5,9 @@
     <div class="d-flex align-items-center ms-auto">
       <button class="btn btn-primary" v-on:click="show">Show</button>
       <select  class="form-control mx-3" v-model="searchCategory">
-          <option value="all" :selected="true">All</option>
-          <option value="category a">Category A</option>
-          <option value="category b">Category B</option>
+          <option value="all" :selected="true">ALL</option>
+          <option v-for="(category, i) in getCategory" :key="i"
+            :value="category">{{category.toUpperCase()}}</option>
       </select>
       <input type="text" class="form-control" placeholder="Search" v-model="searchQuery">
       <div class="d-flex align-items-center justify-content-end w-100">
@@ -95,6 +95,17 @@ export default {
         return this.tasks
       }
     },
+    getCategory() {
+      const arrTask = []
+      for (let i = 0; i < this.tasks.length; i++) {
+        if (
+          !arrTask.includes(this.tasks[i].category)
+        ) {
+          arrTask.push(this.tasks[i].category);
+        }
+      }
+      return arrTask
+    }
   }
 }
 </script>
