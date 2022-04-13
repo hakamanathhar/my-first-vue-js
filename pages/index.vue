@@ -92,7 +92,6 @@ export default {
     }, 2000);
   },
   updated() {
-    console.log(`At this point, Virtual DOM has re-rendered and patched.`)
     this.isLoading = false
   },
   computed: {
