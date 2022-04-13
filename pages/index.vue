@@ -54,7 +54,7 @@
             </div>
             <div class="form-group col-md-4">
                 <select class="form-control" v-model="form.category">
-                  <option selected>Category</option>
+                  <option value="">Category</option>
                   <option value="Category A">Category A</option>
                   <option value="Category B">Category B</option>
                   <option value="Category C">Category C</option>
@@ -128,6 +128,8 @@ export default {
         alert('Masih ada form yang kosong')
         return;
       }
+
+      this.isLoading = true
       this.tasks.push({
         title: this.form.title,
         category: this.form.category,
