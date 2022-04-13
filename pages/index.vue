@@ -128,7 +128,11 @@ export default {
         alert('Masih ada form yang kosong')
         return;
       }
-      this.tasks.push(this.form)
+      this.tasks.push({
+        title: this.form.title,
+        category: this.form.category,
+        description: this.form.description
+      })
       this.form.title =''
       this.form.category =''
       this.form.description =''
