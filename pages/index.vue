@@ -34,6 +34,43 @@
     :isGrid="isGrid"
     />
   </div>
+
+  <div class="action py-2">
+    <a href="#" class="add-button"
+      v-if="!isCreating" @click="isCreating = !isCreating">
+      Add Task
+    </a>
+
+    <div class="add-card" v-else>
+      <form v-on:submit.prevent="handleSubmit()">
+        <div class="card mb-2">
+          <div class="card-header d-flex justify-content-between">
+            <h5 class="my-auto">Add New Task</h5>
+            <button @click="isCreating = !isCreating" class="btn btn-danger ml-auto d-flex justify-content-end">Cancel</button>
+          </div>
+          <div class="card-body row">
+            <div class="form-group col-md-4">
+                <input class="form-control" v-model="form.title" placeholder="Title"/>
+            </div>
+            <div class="form-group col-md-4">
+                <select class="form-control" v-model="form.category">
+                  <option selected>Category</option>
+                  <option value="Category A">Category A</option>
+                  <option value="Category B">Category B</option>
+                  <option value="Category C">Category C</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <textarea class="form-control" v-model="form.description" placeholder="Description"></textarea>
+            </div>
+            <div class="col-md-12">
+              <button type="submit" class="btn btn-primary mt-2 w-100">Submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -46,11 +83,17 @@ export default {
   data() {
     return {
       isLoading:true,
+      isCreating:false,
       showHide: 'Show/Hide',
       searchQuery: '',
       searchCategory: 'all',
       isCreating: false,
       isGrid: false,
+      form: {
+        title: '',
+        category: '',
+        description: '',
+      },
       tasks: [
         {
         title: 'Task 1',
@@ -79,6 +122,14 @@ export default {
       this.tasks.forEach(element => {
         element.isDone = false
       });
+    },
+    handleSubmit: function(event) {
+      if(this.form.title =='' || this.form.category =='' || this.form.description ==''){
+        alert('Masih ada form yang kosong')
+        return;
+      }
+      this.tasks.push(this.form)
+      this.isCreating = !this.isCreating
     }
   },
   created(){
