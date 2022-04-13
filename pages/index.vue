@@ -1,9 +1,11 @@
 <template>
 <div class="container">
+  <div class="spinner-border text-primary position-fixed" role="status" id="loading" v-show="isLoading">
+  </div>
   <div class="title border-bottom d-flex align-items-center py-2">
     <h5>Task</h5>
     <div class="d-flex align-items-center ms-auto">
-      <button class="btn btn-primary" v-on:click="show">Show</button>
+      <button class="btn btn-primary" v-on:click="show">{{showHide}}</button>
       <select  class="form-control mx-3" v-model="searchCategory">
           <option value="all" :selected="true">ALL</option>
           <option v-for="(category, i) in getCategory" :key="i"
@@ -21,7 +23,10 @@
       </div>
     </div>
   </div>
-  <div class="list-task row" v-show="ok">
+  <div class="list-task row">
+    <h2 class="text-center mt-3" v-if="resultQuery.length == 0">
+        Result not found
+    </h2>
     <CardItem
     v-for="(task, i) in resultQuery"
     :key="i"
@@ -40,7 +45,8 @@ export default {
   },
   data() {
     return {
-      ok:true,
+      isLoading:true,
+      showHide: 'Show/Hide',
       searchQuery: '',
       searchCategory: 'all',
       isCreating: false,
@@ -49,19 +55,19 @@ export default {
         {
         title: 'Task 1',
         description: 'ini deskripsi 1',
-        category: 'category a',
+        category: 'Category A',
         isDone: false,
         },
         {
         title: 'Task 2',
         description: 'ini deskripsi 2',
-        category: 'category b',
+        category: 'Category B',
         isDone: false,
         },
         {
         title: 'Task 3',
         description: ' ini deskripsi 3',
-        category: 'category b',
+        category: 'Category B',
         isDone: false,
         }
       ],
@@ -74,6 +80,20 @@ export default {
         element.isDone = false
       });
     }
+  },
+  created(){
+    setTimeout(() => {
+      this.tasks.push({
+        title: 'Task 4',
+        description: ' ini deskripsi 4',
+        category: 'Category C',
+        isDone: false,
+      })
+    }, 2000);
+  },
+  updated() {
+    console.log(`At this point, Virtual DOM has re-rendered and patched.`)
+    this.isLoading = false
   },
   computed: {
     resultQuery() {
@@ -91,7 +111,6 @@ export default {
             .includes(item.category.toLowerCase())
         });
       }else {
-        console.log(this.tasks);
         return this.tasks
       }
     },
@@ -109,3 +128,13 @@ export default {
   }
 }
 </script>
+<style>
+#loading {
+  left: 50%;
+  right: 50%;
+  top: 50%;
+  bottom: 50%;
+  width: 3rem;
+  height: 3rem;
+}
+</style>
