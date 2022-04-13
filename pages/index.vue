@@ -129,6 +129,9 @@ export default {
         return;
       }
       this.tasks.push(this.form)
+      this.form.title =''
+      this.form.category =''
+      this.form.description =''
       this.isCreating = !this.isCreating
     }
   },
