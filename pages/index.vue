@@ -5,6 +5,14 @@
   <div class="title border-bottom d-flex align-items-center py-2">
     <h5>Task</h5>
     <div class="d-flex align-items-center ms-auto">
+      <button class="btn btn-outline-primary py-1 px-3 me-2" @click="shuffle">
+        Shuffle!
+      </button>
+      <select  class="form-control mx-3" v-model="orderData">
+        <option value="none" :selected="true">None</option>
+        <option value="asc">A-Z</option>
+        <option value="desc">Z-A</option>
+      </select>
       <button class="btn btn-primary" v-on:click="show">{{showHide}}</button>
       <select  class="form-control mx-3" v-model="searchCategory">
           <option value="all" :selected="true">ALL</option>
@@ -27,12 +35,14 @@
     <h2 class="text-center mt-3" v-if="resultQuery.length == 0">
         Result not found
     </h2>
+    <transition-group name="tasks" tag="div" class="list-task row">
     <CardItem
     v-for="(task, i) in resultQuery"
-    :key="i"
+    :key="task.id"
     :task="task"
     :isGrid="isGrid"
     />
+    </transition-group>
   </div>
 
   <div class="action py-2">
@@ -87,6 +97,7 @@ export default {
       showHide: 'Show/Hide',
       searchQuery: '',
       searchCategory: 'all',
+      orderData: 'none',
       isCreating: false,
       isGrid: false,
       form: {
@@ -96,28 +107,55 @@ export default {
       },
       tasks: [
         {
-        title: 'Task 1',
-        description: 'ini deskripsi 1',
-        category: 'Category A',
-        isDone: false,
+          id: 1,
+          title: 'Task 1',
+          description: 'ini deskripsi 1',
+          category: 'Category A',
+          isDone: false,
         },
         {
-        title: 'Task 2',
-        description: 'ini deskripsi 2',
-        category: 'Category B',
-        isDone: false,
+          id:2,
+          title: 'Task 2',
+          description: 'ini deskripsi 2',
+          category: 'Category B',
+          isDone: false,
         },
         {
-        title: 'Task 3',
-        description: ' ini deskripsi 3',
-        category: 'Category B',
-        isDone: false,
+          id:3,
+          title: 'Task 3',
+          description: ' ini deskripsi 3',
+          category: 'Category B',
+          isDone: false,
         }
       ],
       isGrid: false,
     }
   },
   methods: {
+    shuffle() {
+      this.tasks = _.shuffle(this.tasks)
+    },
+    order(value) {
+      console.log(value)
+        if(value === 'asc')
+          return this.tasks.sort(function(a,b){
+            if (a.title < b.title)
+              return -1;
+            if (a.title > b.title)
+              return 1;
+            return 0;
+          });
+        else if(value === 'desc')
+          return this.tasks.sort(function(a,b){
+            if (a.title < b.title)
+              return 1;
+            if (a.title > b.title)
+              return -1;
+            return 0;
+          });
+        else
+          return this.tasks
+    },
     show: function (event) {
       this.tasks.forEach(element => {
         element.isDone = false
@@ -131,6 +169,7 @@ export default {
 
       this.isLoading = true
       this.tasks.push({
+        id: Math.random(),
         title: this.form.title,
         category: this.form.category,
         description: this.form.description
@@ -144,6 +183,7 @@ export default {
   created(){
     setTimeout(() => {
       this.tasks.push({
+        id:Math.random(),
         title: 'Task 4',
         description: ' ini deskripsi 4',
         category: 'Category C',
@@ -169,8 +209,8 @@ export default {
             .toLowerCase()
             .includes(item.category.toLowerCase())
         });
-      }else {
-        return this.tasks
+      } else {
+        return this.order(this.orderData)
       }
     },
     getCategory() {
@@ -195,5 +235,8 @@ export default {
   bottom: 50%;
   width: 3rem;
   height: 3rem;
+}
+#app .tasks-move {
+transition: .4s;
 }
 </style>

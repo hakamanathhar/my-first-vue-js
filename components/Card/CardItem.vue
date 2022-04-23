@@ -28,9 +28,10 @@
         <div class="description-task small text-muted">
           {{ task.description }}
         </div>
-        <div class="ml-auto category-task small text-muted">
+        <!-- <div class="ml-auto category-task small text-muted">
             {{ task.category }}
-        </div>
+        </div> -->
+        <input class="form-control form-control-sm" type="date" />
       </div>
   </div>
 </div>

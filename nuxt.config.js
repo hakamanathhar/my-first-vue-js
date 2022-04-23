@@ -1,3 +1,5 @@
+import webpack from 'webpack'
+
 export default {
   server: {
     port: 4000,
@@ -49,6 +51,12 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    plugins: [
+      new webpack.ProvidePlugin({
+      // global modules
+      _: 'lodash'
+      })
+    ]
   },
   pwa: {
     meta: {
