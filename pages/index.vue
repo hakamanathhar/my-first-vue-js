@@ -86,6 +86,8 @@
 
 <script>
 import CardItem from "@/components/Card/CardItem.vue"
+import { mapState, mapMutations, mapGetters, mapActions } from "vuex"
+
 export default {
   components: {
       CardItem
@@ -105,38 +107,21 @@ export default {
         category: '',
         description: '',
       },
-      tasks: [
-        {
-          id: 1,
-          title: 'Task 1',
-          description: 'ini deskripsi 1',
-          category: 'Category A',
-          isDone: false,
-        },
-        {
-          id:2,
-          title: 'Task 2',
-          description: 'ini deskripsi 2',
-          category: 'Category B',
-          isDone: false,
-        },
-        {
-          id:3,
-          title: 'Task 3',
-          description: ' ini deskripsi 3',
-          category: 'Category B',
-          isDone: false,
-        }
-      ],
       isGrid: false,
     }
   },
   methods: {
-    shuffle() {
-      this.tasks = _.shuffle(this.tasks)
-    },
+    ...mapActions('tasks', ['addTask', 'shuffle']),
+    ...mapGetters({
+      getTasks: 'tasks/getTasks'
+    }),
+    // tasks(){
+    //   return this.$store.state.tasks.tasks
+    // },
+    // shuffle() {
+    //   this.$store.dispatch('tasks/shuffle');
+    // },
     order(value) {
-      console.log(value)
         if(value === 'asc')
           return this.tasks.sort(function(a,b){
             if (a.title < b.title)
@@ -168,12 +153,13 @@ export default {
       }
 
       this.isLoading = true
-      this.tasks.push({
+      this.$store.dispatch('tasks/addTask', {
         id: Math.random(),
         title: this.form.title,
         category: this.form.category,
         description: this.form.description
-      })
+      });
+
       this.form.title =''
       this.form.category =''
       this.form.description =''
@@ -182,19 +168,20 @@ export default {
   },
   created(){
     setTimeout(() => {
-      this.tasks.push({
+       this.$store.dispatch('tasks/addTask', {
         id:Math.random(),
         title: 'Task 4',
         description: ' ini deskripsi 4',
         category: 'Category C',
         isDone: false,
-      })
+      });
     }, 2000);
   },
   updated() {
     this.isLoading = false
   },
   computed: {
+    ...mapState('tasks', ['tasks']),
     resultQuery() {
       if (this.searchQuery) {
         return this.tasks.filter((item) => {

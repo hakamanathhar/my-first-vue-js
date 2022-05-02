@@ -16,7 +16,7 @@
       id="task"
       class="me-2 mt-2"
       :checked="task.isDone"
-      v-model="task.isDone"
+      @change="checkedTask(task)"
       >
       <div
         :class="['d-flex flex-column', task.isDone ?
@@ -55,6 +55,11 @@ export default {
       default: false
     }
   },
+  methods: {
+    checkedTask(task) {
+      this.$store.dispatch('tasks/checkedTask', task)
+    },
+  }
 }
 
 </script>
