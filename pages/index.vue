@@ -94,7 +94,7 @@ export default {
   },
   data() {
     return {
-      isLoading:true,
+      isLoading:false,
       isCreating:false,
       showHide: 'Show/Hide',
       searchQuery: '',
@@ -111,7 +111,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('tasks', ['addTask', 'shuffle']),
+    ...mapActions('tasks', ['addTask', 'shuffle','loadTask']),
     ...mapGetters({
       getTasks: 'tasks/getTasks'
     }),
@@ -167,18 +167,21 @@ export default {
     }
   },
   created(){
-    setTimeout(() => {
-       this.$store.dispatch('tasks/addTask', {
-        id:Math.random(),
-        title: 'Task 4',
-        description: ' ini deskripsi 4',
-        category: 'Category C',
-        isDone: false,
-      });
-    }, 2000);
+    // setTimeout(() => {
+    //    this.$store.dispatch('tasks/addTask', {
+    //     id:Math.random(),
+    //     title: 'Task 4',
+    //     description: ' ini deskripsi 4',
+    //     category: 'Category C',
+    //     isDone: false,
+    //   });
+    // }, 2000);
   },
   updated() {
     this.isLoading = false
+  },
+  mounted() {
+    this.loadTask()
   },
   computed: {
     ...mapState('tasks', ['tasks']),
