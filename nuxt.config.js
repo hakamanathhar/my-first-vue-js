@@ -20,10 +20,13 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' },
-
+      // {
+      //   rel: 'stylesheet',
+      //   href:'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css'
+      // }
     ],
-    scripts: [
-      { src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', body: true}
+    script: [
+      { src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', type: "text/javascript"},
     ]
   },
 
@@ -33,7 +36,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/axios.js'
+    '~/plugins/axios.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -46,17 +49,25 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
     '@nuxtjs/pwa'
   ],
 
+  axios: {
+    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
+    baseURL: 'http://127.0.0.1:3333/api',
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    vendor: ["jquery", "bootstrap"],
     plugins: [
       new webpack.ProvidePlugin({
       // global modules
-      _: 'lodash'
+      _: 'lodash',
+      $: "jquery"
       })
-    ]
+    ],
   },
   pwa: {
     meta: {
@@ -73,5 +84,16 @@ export default {
     //   source: '',
     //   fileName: '',
     // }
-  }
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: 'login', method: 'post', propertyName: 'data.token' },
+          user: { url: 'me', method: 'get', propertyName: 'data' },
+          logout: false
+        }
+      }
+    }
+  },
 }
